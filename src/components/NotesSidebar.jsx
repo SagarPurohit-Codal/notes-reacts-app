@@ -7,8 +7,6 @@ import React from "react";
  * - Small header with app name
  * - List of notes
  *
- * For now this is "dumb" UI: it just receives notes + selectedNoteId
- * and displays them. It does NOT manage any state by itself.
  */
 export default function NotesSidebar({ notes, selectedNoteId }) {
   return (
