@@ -18,7 +18,6 @@ export default function NoteEditor({ note }) {
     }
   
     return (
-      // 👇 key forces a remount when note.id changes
       <main key={note.id} className="flex min-w-0 flex-1 flex-col">
         {/* Top bar for current note */}
         <header className="flex items-center justify-between border-b bg-white/90 px-4 py-3">
