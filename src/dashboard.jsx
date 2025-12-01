@@ -1,18 +1,35 @@
 // src/dashboard.jsx
-import React from "react";
+import React, { useState } from "react";
 import NotesSidebar from "./components/NotesSidebar";
 import NoteEditor from "./components/NoteEditor";
-import { mockNotes, mockOpenNote } from "./data/mockNotes";
+import {
+  initialNotes,
+  DEFAULT_SELECTED_NOTE_ID,
+} from "./data/mockNotes";
 
 export default function Dashboard() {
-  // For now, we pretend note with id "2" is selected.
-  // A later commit will use useState for selection.
-  const selectedNoteId = mockOpenNote.id;
+  const [notes] = useState(initialNotes);
+
+  const [selectedNoteId, setSelectedNoteId] = useState(
+    DEFAULT_SELECTED_NOTE_ID
+  );
+
+  // Find the note that should be displayed on the right
+  const selectedNote =
+    notes.find((note) => note.id === selectedNoteId) || notes[0];
+
+  const handleSelectNote = (noteId) => {
+    setSelectedNoteId(noteId);
+  };
 
   return (
     <div className="flex h-screen w-full bg-gray-50 text-gray-900">
-      <NotesSidebar notes={mockNotes} selectedNoteId={selectedNoteId} />
-      <NoteEditor note={mockOpenNote} />
+      <NotesSidebar
+        notes={notes}
+        selectedNoteId={selectedNoteId}
+        onSelectNote={handleSelectNote}
+      />
+      <NoteEditor note={selectedNote} />
     </div>
   );
 }

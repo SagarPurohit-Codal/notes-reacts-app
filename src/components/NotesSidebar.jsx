@@ -8,7 +8,11 @@ import React from "react";
  * - List of notes
  *
  */
-export default function NotesSidebar({ notes, selectedNoteId }) {
+export default function NotesSidebar({
+  notes,
+  selectedNoteId,
+  onSelectNote,
+}) {
   return (
     <aside className="flex w-80 shrink-0 flex-col border-r bg-white/90">
       {/* Header */}
@@ -28,14 +32,16 @@ export default function NotesSidebar({ notes, selectedNoteId }) {
           const isActive = note.id === selectedNoteId;
 
           return (
-            <div
+            <button
               key={note.id}
+              type="button"
+              onClick={() => onSelectNote?.(note.id)}
               className={[
-                "flex flex-col rounded-xl border p-3 text-sm shadow-sm",
+                "flex w-full flex-col rounded-xl border p-3 text-left text-sm shadow-sm",
                 "transition-colors",
                 isActive
                   ? "border-indigo-500 bg-indigo-50/60"
-                  : "border-gray-200 bg-white hover:bg-gray-50 cursor-default",
+                  : "border-gray-200 bg-white hover:bg-gray-50",
               ].join(" ")}
             >
               <div className="flex items-center gap-2">
@@ -47,7 +53,7 @@ export default function NotesSidebar({ notes, selectedNoteId }) {
               <div className="mt-2 text-[11px] text-gray-400">
                 Last updated · {note.updated}
               </div>
-            </div>
+            </button>
           );
         })}
       </div>
