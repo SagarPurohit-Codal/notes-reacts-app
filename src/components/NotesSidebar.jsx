@@ -8,6 +8,15 @@ import React from "react";
  * - List of notes
  *
  */
+
+const getPreview = (body) => {
+    if (!body) return "";
+    const firstLine = body.split("\n")[0].trim();
+    return firstLine.length > 60
+      ? firstLine.slice(0, 60) + "..."
+      : firstLine;
+  };
+
 export default function NotesSidebar({
   notes,
   selectedNoteId,
@@ -15,7 +24,6 @@ export default function NotesSidebar({
 }) {
   return (
     <aside className="flex w-80 shrink-0 flex-col border-r bg-white/90">
-      {/* Header */}
       <div className="flex items-center gap-2 border-b px-4 py-3">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white text-sm font-semibold">
           N
@@ -48,7 +56,7 @@ export default function NotesSidebar({
                 <span className="truncate font-medium">{note.title}</span>
               </div>
               <p className="mt-1 line-clamp-2 text-xs text-gray-600">
-                {note.preview}
+                {getPreview(note.body)}
               </p>
               <div className="mt-2 text-[11px] text-gray-400">
                 Last updated · {note.updated}

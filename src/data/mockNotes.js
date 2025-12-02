@@ -2,7 +2,6 @@ export const initialNotes = [
     {
       id: "1",
       title: "Daily planning",
-      preview: "Outline today’s tasks, meetings, and quick notes...",
       body:
         "Today’s plan:\n\n" +
         "- Review open tasks for the notes app\n" +
@@ -15,7 +14,6 @@ export const initialNotes = [
     {
       id: "2",
       title: "Project: Notes app redesign",
-      preview: "Questions about layout, search, and tagging for the next iteration...",
       body:
         "This is a sample note body for the notes app redesign.\n\n" +
         "- Left: list of notes\n" +
@@ -28,8 +26,6 @@ export const initialNotes = [
     {
       id: "3",
       title: "Ideas: keyboard shortcuts",
-      preview:
-        "Cmd+N for new note, Cmd+K quick jump, inline formatting options...",
       body:
         "Keyboard shortcut ideas:\n\n" +
         "- Cmd/Ctrl + N → new note\n" +
@@ -42,8 +38,6 @@ export const initialNotes = [
     {
       id: "4",
       title: "Meeting notes — team sync",
-      preview:
-        "Decisions, action items, and follow-ups from the weekly check-in...",
       body:
         "Weekly team sync notes:\n\n" +
         "Decisions:\n" +

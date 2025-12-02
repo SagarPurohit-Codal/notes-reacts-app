@@ -1,4 +1,3 @@
-// src/dashboard.jsx
 import React, { useState } from "react";
 import NotesSidebar from "./components/NotesSidebar";
 import NoteEditor from "./components/NoteEditor";
@@ -7,19 +6,42 @@ import {
   DEFAULT_SELECTED_NOTE_ID,
 } from "./data/mockNotes";
 
+// Helper: generate a short preview from the body text
+function generatePreview(body) {
+  if (!body) return "";
+  const firstLine = body.split("\n")[0].trim();
+  if (!firstLine) return "";
+
+  return firstLine.length > 60
+    ? firstLine.slice(0, 60) + "..."
+    : firstLine;
+}
+
 export default function Dashboard() {
-  const [notes] = useState(initialNotes);
+  const [notes, setNotes] = useState(initialNotes);
 
   const [selectedNoteId, setSelectedNoteId] = useState(
     DEFAULT_SELECTED_NOTE_ID
   );
 
-  // Find the note that should be displayed on the right
-  const selectedNote =
-    notes.find((note) => note.id === selectedNoteId) || notes[0];
+  const selectedNote = notes.find((note) => note.id === selectedNoteId) || null;
 
-  const handleSelectNote = (noteId) => {
-    setSelectedNoteId(noteId);
+  const handleUpdateNote = (noteId, fields) => {
+    setNotes((prevNotes) =>
+      prevNotes.map((note) => {
+        if (note.id !== noteId) return note;
+
+        const updatedNote = {
+          ...note,
+          ...fields,
+        };
+
+        // update timestamp
+        updatedNote.updated = new Date().toLocaleString();
+
+        return updatedNote;
+      })
+    );
   };
 
   return (
@@ -27,9 +49,10 @@ export default function Dashboard() {
       <NotesSidebar
         notes={notes}
         selectedNoteId={selectedNoteId}
-        onSelectNote={handleSelectNote}
+        onSelectNote={setSelectedNoteId}
       />
-      <NoteEditor note={selectedNote} />
+
+      <NoteEditor note={selectedNote} onChangeNote={handleUpdateNote} />
     </div>
   );
 }
