@@ -6,15 +6,16 @@ import {
   DEFAULT_SELECTED_NOTE_ID,
 } from "./data/mockNotes";
 
-// Helper: generate a short preview from the body text
-function generatePreview(body) {
-  if (!body) return "";
-  const firstLine = body.split("\n")[0].trim();
-  if (!firstLine) return "";
-
-  return firstLine.length > 60
-    ? firstLine.slice(0, 60) + "..."
-    : firstLine;
+// Helper function to create a new note
+function createEmptyNote() {
+  const now = new Date();
+  return {
+    id: String(now.getTime()),
+    title: "",
+    body: "",
+    created: now.toLocaleString(),
+    updated: now.toLocaleString(),
+  };
 }
 
 export default function Dashboard() {
@@ -44,12 +45,19 @@ export default function Dashboard() {
     );
   };
 
+  const handleAddNote = () => {
+    const newNote = createEmptyNote();
+    setNotes((prev) => [newNote,...prev]);
+    setSelectedNoteId(newNote.id);
+  };
+
   return (
     <div className="flex h-screen w-full bg-gray-50 text-gray-900">
       <NotesSidebar
         notes={notes}
         selectedNoteId={selectedNoteId}
         onSelectNote={setSelectedNoteId}
+        onAddNote={handleAddNote}
       />
 
       <NoteEditor note={selectedNote} onChangeNote={handleUpdateNote} />

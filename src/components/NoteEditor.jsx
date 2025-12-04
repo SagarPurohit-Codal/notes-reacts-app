@@ -29,7 +29,7 @@ export default function NoteEditor({ note, onChangeNote }) {
 
       {/* Editor */}
       <section className="flex-1 overflow-y-auto p-4 sm:p-6">
-        <div className="mx-auto flex h-full max-w-3xl flex-col rounded-2xl border bg-white p-4 shadow-sm sm:p-6">
+        <div className="mx-auto flex h-full flex-col rounded-2xl border bg-white p-4 shadow-sm sm:p-6">
           <label className="text-xs font-medium uppercase tracking-wide text-gray-500">
             Title
             <input
