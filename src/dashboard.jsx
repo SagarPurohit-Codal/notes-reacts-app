@@ -6,6 +6,8 @@ import {
   DEFAULT_SELECTED_NOTE_ID,
 } from "./data/mockNotes";
 
+const STORAGE_KEY = "notes-app-notes";
+
 // Helper function to create a new note
 function createEmptyNote() {
   const now = new Date();
@@ -18,8 +20,27 @@ function createEmptyNote() {
   };
 }
 
+// Load notes from localStorage once on app start
+function loadInitialNotes() {
+  if (typeof window === "undefined") return initialNotes;
+
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return initialNotes;
+
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      return parsed;
+    }
+  } catch (err) {
+    console.error("Failed to load notes from localStorage:", err);
+  }
+
+  return initialNotes;
+}
+
 export default function Dashboard() {
-  const [notes, setNotes] = useState(initialNotes);
+  const [notes, setNotes] = useState(loadInitialNotes);
 
   const [selectedNoteId, setSelectedNoteId] = useState(
     DEFAULT_SELECTED_NOTE_ID
@@ -51,6 +72,18 @@ export default function Dashboard() {
     setSelectedNoteId(newNote.id);
   };
 
+  // Save all notes to localStorage 
+  const handleSaveNotes = () => {
+    if (typeof window === "undefined") return;
+
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+      console.log("Notes saved to localStorage");
+    } catch (err) {
+      console.error("Failed to save notes to localStorage:", err);
+    }
+  };
+
   return (
     <div className="flex h-screen w-full bg-gray-50 text-gray-900">
       <NotesSidebar
@@ -60,7 +93,7 @@ export default function Dashboard() {
         onAddNote={handleAddNote}
       />
 
-      <NoteEditor note={selectedNote} onChangeNote={handleUpdateNote} />
+      <NoteEditor note={selectedNote} onChangeNote={handleUpdateNote} onSaveNotes={handleSaveNotes}/>
     </div>
   );
 }

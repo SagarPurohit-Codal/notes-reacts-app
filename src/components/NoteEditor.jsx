@@ -7,7 +7,7 @@ import React from "react";
  * - Top header for the open note (delete button placeholder)
  * - Open note
  */
-export default function NoteEditor({ note, onChangeNote }) {
+export default function NoteEditor({ note, onChangeNote, onSaveNotes }) {
   if (!note) {
     return (
       <main className="flex min-w-0 flex-1 items-center justify-center text-sm text-gray-500">
@@ -22,8 +22,36 @@ export default function NoteEditor({ note, onChangeNote }) {
       <header className="flex items-center justify-between border-b bg-white/90 px-4 py-3">
         <h1 className="text-sm font-semibold text-gray-900">Open Note</h1>
 
-        <div className="hidden text-xs text-gray-500 sm:block">
-          (Delete button goes here)
+        <div className="hidden justify-center align-middle items-center gap-2 text-xs text-gray-500 sm:flex">
+            <button
+                type="button"
+                onClick={onSaveNotes}
+                className="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 active:bg-indigo-800 transition-colors text-xs font-semibold"
+                >
+                Save
+            </button>
+            <button
+                type="button"
+                onClick={()=>{console.log("clicked")}}
+                className="p-2 bg-purple-400 text-white rounded-lg hover:bg-purple-700 active:bg-purple-800 disabled:opacity-50 disabled:pointer-events-none transition-colors"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 
+                        4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 
+                        1 0 00-1 1v3M4 7h16"
+                    />
+                </svg>
+            </button>
         </div>
       </header>
 
