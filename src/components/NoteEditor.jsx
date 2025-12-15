@@ -7,12 +7,34 @@ import React from "react";
  * - Top header for the open note (delete button placeholder)
  * - Open note
  */
-export default function NoteEditor({ note, onChangeNote, onSaveNotes }) {
+export default function NoteEditor({ note, onChangeNote, onSaveNotes, onAddNote, hasNotes }) {
   if (!note) {
     return (
-      <main className="flex min-w-0 flex-1 items-center justify-center text-sm text-gray-500">
-        No note selected.
-      </main>
+        <main className="flex min-w-0 flex-1 items-center justify-center bg-gray-50 p-6">
+            <div className="w-full max-w-md rounded-2xl border bg-white p-6 shadow-sm text-center">
+                <h2 className="text-base font-semibold text-gray-900">
+                {hasNotes ? "Select a note to edit" : "No notes yet"}
+                </h2>
+
+                <p className="mt-2 text-sm text-gray-600">
+                {hasNotes
+                    ? "Choose a note from the list on the left to start editing or create a new one."
+                    : "Create your first note to get started."}
+                </p>
+
+                <button
+                    type="button"
+                    onClick={onAddNote}
+                    className="mt-4 rounded-full bg-indigo-100 px-4 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-200 transition"
+                >
+                    + New Note
+                </button>
+
+                <p className="mt-3 text-xs text-gray-400">
+                Tip: Don’t forget to hit <span className="font-medium">Save</span> after editing.
+                </p>
+            </div>
+        </main>
     );
   }
 

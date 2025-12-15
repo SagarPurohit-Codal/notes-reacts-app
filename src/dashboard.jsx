@@ -93,7 +93,12 @@ export default function Dashboard() {
         onAddNote={handleAddNote}
       />
 
-      <NoteEditor note={selectedNote} onChangeNote={handleUpdateNote} onSaveNotes={handleSaveNotes}/>
+      <NoteEditor
+        note={selectedNote}
+        onChangeNote={handleUpdateNote}
+        onSaveNotes={handleSaveNotes}
+        onAddNote={handleAddNote}
+        hasNotes={notes.length > 0}/>
     </div>
   );
 }
