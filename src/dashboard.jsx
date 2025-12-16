@@ -72,6 +72,20 @@ export default function Dashboard() {
     setSelectedNoteId(newNote.id);
   };
 
+  const handleDeleteNote = (noteId) => {
+    setNotes((prevNotes) => {
+      const filteredNotes = prevNotes.filter(
+        (note) => note.id !== noteId
+      );
+  
+      if (noteId === selectedNoteId) {
+        setSelectedNoteId(null);
+      }
+  
+      return filteredNotes;
+    });
+  };
+
   // Save all notes to localStorage 
   const handleSaveNotes = () => {
     if (typeof window === "undefined") return;
@@ -98,7 +112,9 @@ export default function Dashboard() {
         onChangeNote={handleUpdateNote}
         onSaveNotes={handleSaveNotes}
         onAddNote={handleAddNote}
-        hasNotes={notes.length > 0}/>
+        hasNotes={notes.length > 0}
+        onDeleteNote={handleDeleteNote}
+        />
     </div>
   );
 }

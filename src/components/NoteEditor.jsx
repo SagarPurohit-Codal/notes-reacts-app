@@ -7,7 +7,7 @@ import React from "react";
  * - Top header for the open note (delete button placeholder)
  * - Open note
  */
-export default function NoteEditor({ note, onChangeNote, onSaveNotes, onAddNote, hasNotes }) {
+export default function NoteEditor({ note, onChangeNote, onSaveNotes, onAddNote, hasNotes, onDeleteNote }) {
   if (!note) {
     return (
         <main className="flex min-w-0 flex-1 items-center justify-center bg-gray-50 p-6">
@@ -54,7 +54,7 @@ export default function NoteEditor({ note, onChangeNote, onSaveNotes, onAddNote,
             </button>
             <button
                 type="button"
-                onClick={()=>{console.log("clicked")}}
+                onClick={() => onDeleteNote?.(note.id)}
                 className="p-2 bg-purple-400 text-white rounded-lg hover:bg-purple-700 active:bg-purple-800 disabled:opacity-50 disabled:pointer-events-none transition-colors"
             >
                 <svg
