@@ -41,6 +41,7 @@ function loadInitialNotes() {
 
 export default function Dashboard() {
   const [notes, setNotes] = useState(loadInitialNotes);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   const [selectedNoteId, setSelectedNoteId] = useState(
     DEFAULT_SELECTED_NOTE_ID
@@ -64,12 +65,14 @@ export default function Dashboard() {
         return updatedNote;
       })
     );
+    setHasUnsavedChanges(true);
   };
 
   const handleAddNote = () => {
     const newNote = createEmptyNote();
     setNotes((prev) => [newNote,...prev]);
     setSelectedNoteId(newNote.id);
+    setHasUnsavedChanges(true);
   };
 
   const handleDeleteNote = (noteId) => {
@@ -98,6 +101,7 @@ export default function Dashboard() {
 
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+      setHasUnsavedChanges(false);
       console.log("Notes saved to localStorage");
     } catch (err) {
       console.error("Failed to save notes to localStorage:", err);
@@ -120,6 +124,7 @@ export default function Dashboard() {
         onAddNote={handleAddNote}
         hasNotes={notes.length > 0}
         onDeleteNote={handleDeleteNote}
+        hasUnsavedChanges={hasUnsavedChanges}
         />
     </div>
   );
