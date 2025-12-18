@@ -74,14 +74,20 @@ export default function Dashboard() {
 
   const handleDeleteNote = (noteId) => {
     setNotes((prevNotes) => {
-      const filteredNotes = prevNotes.filter(
-        (note) => note.id !== noteId
-      );
+      const filteredNotes = prevNotes.filter((note) => note.id !== noteId);
   
       if (noteId === selectedNoteId) {
         setSelectedNoteId(null);
       }
   
+      // Sync with localstorage
+      if (typeof window !== "undefined") {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(filteredNotes));
+        } catch (err) {
+          console.error("Failed to update localStorage after delete:", err);
+        }
+      }
       return filteredNotes;
     });
   };
