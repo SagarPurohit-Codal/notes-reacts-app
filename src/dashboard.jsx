@@ -8,11 +8,19 @@ import {
 
 const STORAGE_KEY = "notes-app-notes";
 
+const generateId = () => {
+  if (typeof crypto !== "undefined" && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+
+  return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+};
+
 // Helper function to create a new note
 function createEmptyNote() {
   const now = new Date();
   return {
-    id: String(now.getTime()),
+    id: generateId(),
     title: "",
     body: "",
     created: now.toLocaleString(),
