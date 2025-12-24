@@ -22,6 +22,7 @@ export default function NotesSidebar({
   selectedNoteId,
   onSelectNote,
   onAddNote,
+  unsavedNoteIds
 }) {
   return (
     <aside className="flex w-80 shrink-0 flex-col border-r bg-white/90">
@@ -48,6 +49,7 @@ export default function NotesSidebar({
       <div className="flex-1 overflow-y-auto px-3 py-3 space-y-2">
         {notes.map((note) => {
           const isActive = note.id === selectedNoteId;
+          const isUnsaved = unsavedNoteIds?.has(note.id);
 
           return (
             <button
@@ -58,9 +60,10 @@ export default function NotesSidebar({
                 "flex w-full flex-col rounded-xl border p-3 text-left text-sm shadow-sm",
                 "transition-colors",
                 isActive
-                  ? "border-indigo-500 bg-indigo-50/60"
-                  : "border-gray-200 bg-white hover:bg-gray-50",
-              ].join(" ")}
+                    ? "border-indigo-500 bg-indigo-50/60"
+                    : "border-gray-200 bg-white hover:bg-gray-50",
+                isUnsaved ? "ring-2 ring-amber-400 border-amber-300" : "",
+                ].join(" ")}
             >
               <div className="flex items-center gap-2">
                 <span className="truncate font-medium">{note.title}</span>

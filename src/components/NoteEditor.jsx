@@ -8,13 +8,14 @@ import ModalPortal from "./ModalPortal";
  * - Open note
  */
 
-export default function NoteEditor({ note, onChangeNote, onSaveNotes, onAddNote, hasNotes, onDeleteNote, hasUnsavedChanges}) {
+export default function NoteEditor({ note, onChangeNote, onAddNote, hasNotes, onDeleteNote, onSaveNote, unsavedNoteIds }) {
 
   const AUTO_DELETE_SECONDS = 5;
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(AUTO_DELETE_SECONDS);
   const autoDeleteTimeoutRef = React.useRef(null);
   const intervalRef = React.useRef(null);
+  const isUnsaved = !!note && unsavedNoteIds?.has(note.id);
 
   useEffect(() => {
     if (!showDeleteModal) return;
@@ -81,19 +82,19 @@ export default function NoteEditor({ note, onChangeNote, onSaveNotes, onAddNote,
         <h1 className="text-sm font-semibold text-gray-900">Open Note</h1>
 
         <div className="hidden justify-center align-middle items-center gap-2 text-xs text-gray-500 sm:flex">
-          {hasUnsavedChanges && (
-            <span className="text-[11px] text-amber-600 font-medium">
-              Unsaved changes
-            </span>
-          )}
+            {isUnsaved && (
+              <span className="text-[11px] text-amber-600 font-medium">
+                Unsaved changes
+              </span>
+            )}
           
           <button
             type="button"
-            onClick={onSaveNotes}
-            disabled={!hasUnsavedChanges}
+            onClick={() => onSaveNote?.(note.id)}
+            disabled={!isUnsaved}
             className={[
               "px-5 py-2 rounded-lg transition-colors text-xs font-semibold",
-              hasUnsavedChanges
+              isUnsaved
                 ? "bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800"
                 : "bg-gray-200 text-gray-500 cursor-not-allowed",
             ].join(" ")}

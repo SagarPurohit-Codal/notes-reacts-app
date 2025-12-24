@@ -49,7 +49,8 @@ function loadInitialNotes() {
 
 export default function Dashboard() {
   const [notes, setNotes] = useState(loadInitialNotes);
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [unsavedNoteIds, setUnsavedNoteIds] = useState(() => new Set());
+  // const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   const [selectedNoteId, setSelectedNoteId] = useState(
     DEFAULT_SELECTED_NOTE_ID
@@ -73,14 +74,27 @@ export default function Dashboard() {
         return updatedNote;
       })
     );
-    setHasUnsavedChanges(true);
+
+    setUnsavedNoteIds((prev) => {
+      const next = new Set(prev);
+      next.add(noteId);
+      return next;
+    });
+
+    // setHasUnsavedChanges(true);
   };
 
   const handleAddNote = () => {
     const newNote = createEmptyNote();
     setNotes((prev) => [newNote,...prev]);
     setSelectedNoteId(newNote.id);
-    setHasUnsavedChanges(true);
+    // setHasUnsavedChanges(true);
+
+    setUnsavedNoteIds((prev) => {
+      const next = new Set(prev);
+      next.add(newNote.id);
+      return next;
+    });
   };
 
   const handleDeleteNote = (noteId) => {
@@ -90,26 +104,69 @@ export default function Dashboard() {
       if (noteId === selectedNoteId) {
         setSelectedNoteId(null);
       }
-  
-      // Sync with localstorage
-      if (typeof window !== "undefined") {
-        try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(filteredNotes));
-        } catch (err) {
-          console.error("Failed to update localStorage after delete:", err);
-        }
-      }
+
       return filteredNotes;
     });
+
+    setUnsavedNoteIds((prev) => {
+      const next = new Set(prev);
+      next.delete(noteId);
+      return next;
+    });
+
+    if (typeof window !== "undefined") {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        const stored = raw ? JSON.parse(raw) : [];
+        const storedArr = Array.isArray(stored) ? stored : [];
+  
+        const nextStored = storedArr.filter((n) => n.id !== noteId);
+  
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(nextStored));
+      } catch (err) {
+        console.error("Failed to update localStorage after delete:", err);
+      }
+    }
   };
 
+  //Save individual note to local storage
+
+  const handleSaveNote = (noteId) => {
+    const noteToSave = notes.find((n) => n.id === noteId);
+    if (!noteToSave) return;
+  
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      const stored = raw ? JSON.parse(raw) : [];
+      const storedArr = Array.isArray(stored) ? stored : [];
+  
+      const exists = storedArr.some((n) => n.id === noteId);
+  
+      const nextStored = exists
+        ? storedArr.map((n) => (n.id === noteId ? noteToSave : n))
+        : [noteToSave, ...storedArr];
+  
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(nextStored));
+  
+      // mark as saved
+      setUnsavedNoteIds((prev) => {
+        const next = new Set(prev);
+        next.delete(noteId);
+        return next;
+      });
+    } catch (err) {
+      console.error("Failed to save note to localStorage:", err);
+    }
+  };
+
+  
   // Save all notes to localStorage 
   const handleSaveNotes = () => {
     if (typeof window === "undefined") return;
 
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
-      setHasUnsavedChanges(false);
+      // setHasUnsavedChanges(false);
       console.log("Notes saved to localStorage");
     } catch (err) {
       console.error("Failed to save notes to localStorage:", err);
@@ -123,16 +180,17 @@ export default function Dashboard() {
         selectedNoteId={selectedNoteId}
         onSelectNote={setSelectedNoteId}
         onAddNote={handleAddNote}
+        unsavedNoteIds={unsavedNoteIds}
       />
 
       <NoteEditor
         note={selectedNote}
         onChangeNote={handleUpdateNote}
-        onSaveNotes={handleSaveNotes}
         onAddNote={handleAddNote}
         hasNotes={notes.length > 0}
         onDeleteNote={handleDeleteNote}
-        hasUnsavedChanges={hasUnsavedChanges}
+        onSaveNote={handleSaveNote}
+        unsavedNoteIds={unsavedNoteIds}
         />
     </div>
   );
